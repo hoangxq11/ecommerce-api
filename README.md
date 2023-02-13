@@ -4,6 +4,18 @@
 
 
 
+## Installation
+
+- To run this project, you will need to install java, mysql, git
+- Clone project from github
+- Run `data.sql` from `src/main/resources` in your Database Management System
+- Open project in IDE which support for Spring and run project or use maven in command prompt
+
+
+## Test api
+- To test api access link: `localhost:port/context-path/swagger-ui.html` 
+- You can change `port` and `context-path` in `application.properties` from `src/main/resources`
+
 ## API Reference
 
 #### Authentication
