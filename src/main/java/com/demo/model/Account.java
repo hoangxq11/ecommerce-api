@@ -19,7 +19,7 @@ import java.util.Set;
 public class Account {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Integer id;
 	@NotNull
 	@Column(name = "username", unique = true, nullable = false)
 	private String username;
@@ -33,9 +33,9 @@ public class Account {
 	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
-			name = "user_authority",
-			joinColumns = @JoinColumn(name = "user_id"),
-			inverseJoinColumns = @JoinColumn(name = "authority_name"))
+			name = "accountauthority",
+			joinColumns = @JoinColumn(name = "account_id"),
+			inverseJoinColumns = @JoinColumn(name = "authority_id"))
 	private Set<Authority> authorities = new HashSet<Authority>();
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "account")
 	private Profile profile;

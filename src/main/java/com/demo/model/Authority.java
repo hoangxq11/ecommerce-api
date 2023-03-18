@@ -1,6 +1,7 @@
 package com.demo.model;
 
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,8 +13,12 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "authority")
 public class Authority {
-    @NotNull
     @Id
+    private Integer id;
+    @NotNull
     @Column(name = "name")
     private String name;
+    @Column(name = "description")
+    @Type(type = "text")
+    private String description;
 }
