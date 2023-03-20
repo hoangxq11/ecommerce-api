@@ -17,5 +17,8 @@ public class Assessment {
     private String comment;
     @Column(name = "star")
     private Integer star;
-    // TODO: continue create properties
+    @ManyToOne
+    @JoinColumn(name = "sccount_id")
+    private Account account;
+    // TODO: Field product bill id
 }
