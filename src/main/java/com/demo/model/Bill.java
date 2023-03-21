@@ -26,6 +26,10 @@ public class Bill {
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
-
-    // TODO: Field shipping service id and order type id
+    @ManyToOne
+    @JoinColumn(name = "shipping_service_id")
+    private ShippingService shippingService;
+    @ManyToOne
+    @JoinColumn(name = "order_type_id")
+    private OrderType orderType;
 }

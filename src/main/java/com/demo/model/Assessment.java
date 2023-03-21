@@ -20,5 +20,7 @@ public class Assessment {
     @ManyToOne
     @JoinColumn(name = "sccount_id")
     private Account account;
-    // TODO: Field product bill id
+    @ManyToOne
+    @JoinColumn(name = "product_bill_id")
+    private ProductBill productBill;
 }

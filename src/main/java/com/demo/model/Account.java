@@ -39,4 +39,7 @@ public class Account {
 	private Set<Authority> authorities = new HashSet<Authority>();
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "account")
 	private Profile profile;
+	@ManyToOne
+	@JoinColumn(name = "rank_id")
+	private Rank rank;
 }

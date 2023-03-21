@@ -24,6 +24,10 @@ public class Image {
     @ManyToOne
     @JoinColumn(name = "assessment_id")
     private Assessment assessment;
-
-    //TODO: Field store id and product id
+    @ManyToOne
+    @JoinColumn(name = "store_id")
+    private Store store;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 }

@@ -1,6 +1,7 @@
 package com.demo.model;
 
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
@@ -18,10 +19,11 @@ public class Profile {
     @Column(name = "phone_number")
     private String phoneNumber;
     @Column(name = "address")
+    @Type(type = "text")
     private String address;
-    @ManyToOne
-    @JoinColumn(name = "image_id")
-    private Image image;
+//    @ManyToOne
+//    @JoinColumn(name = "image_id")
+//    private Image image;
     @OneToOne
     @JoinColumn(name = "account_id")
     private Account account;

@@ -26,6 +26,7 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "material_id")
     private Material material;
-
-    // TODO: Field supplier id
+    @ManyToOne
+    @JoinColumn(name = "supplier_id")
+    private Supplier supplier;
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "billorder")
@@ -21,4 +22,7 @@ public class BillOrder {
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
+
+    @OneToMany(mappedBy = "billOrder", fetch = FetchType.LAZY)
+    private Set<ProductBillOrder> productBillOrders;
 }
