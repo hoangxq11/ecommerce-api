@@ -3,6 +3,7 @@ package com.demo.web.exception.handle;
 import com.demo.web.dto.response.utils.ErrorResponse;
 import com.demo.web.dto.response.utils.Response;
 import com.demo.web.dto.response.utils.ResponseUtils;
+import com.demo.web.exception.EntityNotFoundException;
 import com.demo.web.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,14 @@ public class ExceptionControllerAdvice {
     public ResponseEntity<Response> ServiceErrorHandler(ServiceException e) {
         String errKey = e.getMessage();
         String errMsg = e.getErrMsg();
+        log.error(errKey, errMsg);
+        return ResponseUtils.badRequest(ErrorResponse.of(errKey, errMsg));
+    }
+
+    @ExceptionHandler({EntityNotFoundException.class})
+    public ResponseEntity<Response> EntityNotFoundErrorHandler(EntityNotFoundException e) {
+        String errKey = e.getMessage();
+        String errMsg = "Can not find " + e.getEntityName() + " with id: " + e.getEntityId();
         log.error(errKey, errMsg);
         return ResponseUtils.badRequest(ErrorResponse.of(errKey, errMsg));
     }

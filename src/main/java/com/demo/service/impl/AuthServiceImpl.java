@@ -10,6 +10,7 @@ import com.demo.web.dto.request.SignupRequest;
 import com.demo.web.dto.response.JwtResponse;
 import com.demo.web.exception.EntityNotFoundException;
 import com.demo.web.exception.ServiceException;
+import com.demo.web.security.AuthoritiesConstants;
 import com.demo.web.security.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -78,11 +79,11 @@ public class AuthServiceImpl implements AuthService {
         Set<Authority> authorities = new HashSet<>();
 
         if (authoritiesString == null) {
-            authorities.add(authorityRepository.findById("ROLE_CUSTOMER").orElseThrow(
-                    () -> new EntityNotFoundException(Authority.class.getName(), "ROLE_CUSTOMER")
+            authorities.add(authorityRepository.findByName(AuthoritiesConstants.CUSTOMER).orElseThrow(
+                    () -> new EntityNotFoundException(Authority.class.getName(), AuthoritiesConstants.CUSTOMER)
             ));
         } else {
-            authoritiesString.forEach(authority -> authorities.add(authorityRepository.findById(authority).orElseThrow(
+            authoritiesString.forEach(authority -> authorities.add(authorityRepository.findByName(authority).orElseThrow(
                     () -> new EntityNotFoundException(Authority.class.getName(), authority)
             )));
         }

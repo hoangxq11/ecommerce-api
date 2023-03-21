@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
-@Table(name = "authority")
+@Table(name = "authorities")
 public class Authority {
     @Id
     private Integer id;

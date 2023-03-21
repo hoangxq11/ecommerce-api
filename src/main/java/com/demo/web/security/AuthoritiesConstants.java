@@ -2,11 +2,10 @@ package com.demo.web.security;
 
 public final class AuthoritiesConstants {
 
-    // Based role: Customers, managers, warehouse staff and consultants
+    // Based role: Customers, managers, support staff
     public static final String CUSTOMER = "ROLE_CUSTOMER";
     public static final String MANAGER = "ROLE_MANAGER";
-    public static final String WAREHOUSE_STAFF = "ROLE_WAREHOUSE_STAFF";
-    public static final String CONSULTANT = "ROLE_CONSULTANT";
+    public static final String SUPPORT_STAFF = "ROLE_SUPPORT_STAFF";
 
     private AuthoritiesConstants() {}
 }

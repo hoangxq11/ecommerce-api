@@ -1,6 +1,8 @@
 package com.demo.web.exception;
 
+import lombok.Data;
 
+@Data
 public class EntityNotFoundException extends RuntimeException {
 
     private String entityName;
