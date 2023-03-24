@@ -2,8 +2,12 @@ package com.demo.service.impl;
 
 import com.demo.model.Account;
 import com.demo.model.Authority;
+import com.demo.model.Profile;
+import com.demo.model.Rank;
 import com.demo.repository.AccountRepository;
 import com.demo.repository.AuthorityRepository;
+import com.demo.repository.ProfileRepository;
+import com.demo.repository.RankRepository;
 import com.demo.service.AuthService;
 import com.demo.web.dto.request.LoginRequest;
 import com.demo.web.dto.request.SignupRequest;
@@ -36,6 +40,8 @@ public class AuthServiceImpl implements AuthService {
 
     private final AccountRepository accountRepository;
     private final AuthorityRepository authorityRepository;
+    private final ProfileRepository profileRepository;
+    private final RankRepository rankRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
     private final PasswordEncoder passwordEncoder;
@@ -88,6 +94,8 @@ public class AuthServiceImpl implements AuthService {
             )));
         }
         account.setAuthorities(authorities);
+        account.setRank(rankRepository.save(new Rank()));
         accountRepository.save(account);
+        profileRepository.save(Profile.builder().account(account).build());
     }
 }

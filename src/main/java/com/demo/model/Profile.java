@@ -1,11 +1,18 @@
 package com.demo.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "profiles")
 public class Profile {
@@ -18,6 +25,10 @@ public class Profile {
     private String lastName;
     @Column(name = "phone_number")
     private String phoneNumber;
+    @Column(name = "date_of_irth")
+    private Date dateOfBirth;
+    @Column(name = "gender")
+    private String gender;
     @Column(name = "address")
     @Type(type = "text")
     private String address;
