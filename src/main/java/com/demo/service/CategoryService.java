@@ -1,11 +1,12 @@
 package com.demo.service;
 
+import com.demo.model.Category;
 import com.demo.web.dto.CategoryDto;
 
 import java.util.List;
 
 public interface CategoryService {
-    List<CategoryDto> getCategoriesWithoutParent();
+    List<Category> getCategoriesWithoutParent();
 
-    List<CategoryDto> getCategoriesByParentId(Integer parentId);
+    List<Category> getCategoriesByParentId(Integer parentId);
 }
