@@ -1,13 +1,7 @@
 package com.demo.service.impl;
 
-import com.demo.model.Account;
-import com.demo.model.Authority;
-import com.demo.model.Profile;
-import com.demo.model.Rank;
-import com.demo.repository.AccountRepository;
-import com.demo.repository.AuthorityRepository;
-import com.demo.repository.ProfileRepository;
-import com.demo.repository.RankRepository;
+import com.demo.model.*;
+import com.demo.repository.*;
 import com.demo.service.AuthService;
 import com.demo.web.dto.request.LoginRequest;
 import com.demo.web.dto.request.SignupRequest;
@@ -28,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,6 +37,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthorityRepository authorityRepository;
     private final ProfileRepository profileRepository;
     private final RankRepository rankRepository;
+    private final CartRepository cartRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
     private final PasswordEncoder passwordEncoder;
@@ -97,5 +93,11 @@ public class AuthServiceImpl implements AuthService {
         account.setRank(rankRepository.save(new Rank()));
         accountRepository.save(account);
         profileRepository.save(Profile.builder().account(account).build());
+
+        //Create cart if account have role customer
+        if (authorities.stream().map(Authority::getName).collect(Collectors.toList()).contains(AuthoritiesConstants.CUSTOMER))
+            cartRepository.save(Cart.builder()
+                    .createdDate(Instant.now())
+                    .account(account).build());
     }
 }
