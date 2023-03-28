@@ -1,10 +1,12 @@
 package com.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "images")
@@ -13,9 +15,9 @@ public class Image {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "uuid", columnDefinition = "char(32)")
+    @Column(name = "id", columnDefinition = "varchar(36)")
     @Type(type = "org.hibernate.type.UUIDCharType")
-    private Long id;
+    private UUID id;
     @Column(name = "url_image")
     @Type(type = "text")
     private String imageUrl;
@@ -27,7 +29,8 @@ public class Image {
     @ManyToOne
     @JoinColumn(name = "store_id")
     private Store store;
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 }

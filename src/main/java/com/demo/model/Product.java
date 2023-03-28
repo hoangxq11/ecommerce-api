@@ -5,6 +5,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "products")
@@ -29,4 +30,6 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    List<Image> images;
 }
