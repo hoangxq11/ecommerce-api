@@ -1,16 +1,24 @@
 package com.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "productcart")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ProductCart {
     @EmbeddedId
     private ProductCartKey id;
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("cartId")
     @JoinColumn(name = "cart_id")
     private Cart cart;

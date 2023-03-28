@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Table(name = "carts")
@@ -25,4 +26,6 @@ public class Cart {
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProductCart> productCarts;
 }
