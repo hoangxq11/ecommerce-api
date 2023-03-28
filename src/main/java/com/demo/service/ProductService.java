@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ProductService {
     List<ProductDetailDto> getProducts(ProductCriteria productCriteria);
+
+    ProductDetailDto getProductById(Integer productId);
 }
