@@ -9,4 +9,8 @@ public interface CategoryService {
     List<Category> getCategoriesWithoutParent();
 
     List<Category> getCategoriesByParentId(Integer parentId);
+
+    void addCategory(CategoryDto categoryDto);
+
+    void removeCategory(Integer categoryId);
 }

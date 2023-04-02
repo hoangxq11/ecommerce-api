@@ -1,13 +1,16 @@
 package com.demo.service.impl;
 
+import com.demo.model.Product;
 import com.demo.model.ProductDetail;
 import com.demo.repository.ProductDetailRepository;
 import com.demo.repository.ProductRepository;
 import com.demo.service.ProductService;
 import com.demo.service.utils.MappingHelper;
 import com.demo.web.dto.ProductDetailDto;
+import com.demo.web.dto.ProductDto;
 import com.demo.web.dto.request.ProductCriteria;
 import com.demo.web.exception.EntityNotFoundException;
+import com.demo.web.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,5 +39,34 @@ public class ProductServiceImpl implements ProductService {
         var productDetail = productDetailRepository.findById(productId)
                 .orElseThrow(() -> new EntityNotFoundException(ProductDetail.class.getName(), productId.toString()));
         return mappingHelper.map(productDetail, ProductDetailDto.class);
+    }
+    @Override
+    public void addProduct(ProductDetailDto productDetailDto){
+
+    }
+
+    @Override
+    public void updateProduct(ProductDto productDto, Integer productId){
+//        price, image,
+        if(productRepository.findById(productId).isPresent()){
+            productDto.setId(productId);
+            productRepository.save(mappingHelper.map(productDto, Product.class));
+        }
+        else{
+            throw new ServiceException("Unknown error", "err.api.Unknown-error");
+        }
+
+    }
+    @Override
+    public void removeProduct(Integer productId){
+//        check cart
+
+//        check bill order p
+
+//        check pill payment
+
+//        check assessment
+
+//        check image
     }
 }

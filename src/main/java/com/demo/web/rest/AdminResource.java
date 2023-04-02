@@ -3,6 +3,8 @@ package com.demo.web.rest;
 import com.demo.service.ProductService;
 import com.demo.service.ProfileService;
 import com.demo.service.StoreService;
+import com.demo.service.SupplierService;
+import com.demo.web.dto.SupplierDto;
 import com.demo.web.dto.request.ProductCriteria;
 import com.demo.web.dto.response.utils.ResponseUtils;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +18,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/admin")
 @RequiredArgsConstructor
 
-public class AdminController {
+public class AdminResource {
     private final ProductService productService;
     private final ProfileService profileService;
     private final StoreService storeService;
 
+    private final SupplierService supplierService;
+
+    @GetMapping("/admin-home")
+    public String homePage(){
+        return "admin/admin-home";
+    }
     @GetMapping("/admin-profile")
     public ResponseEntity<?> getAdminProfile(){
         return ResponseUtils.ok(profileService.getCustomerProfile());
@@ -40,5 +48,4 @@ public class AdminController {
     @GetMapping("/order")
     public ResponseEntity<?> getOrder(){ return ResponseUtils.ok();}
 
-//    @GetMapping("/statistic")
 }

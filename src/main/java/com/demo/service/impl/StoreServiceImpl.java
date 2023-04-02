@@ -4,6 +4,7 @@ import com.demo.repository.StoreRepository;
 import com.demo.service.StoreService;
 import com.demo.service.utils.MappingHelper;
 import com.demo.web.dto.ProfileDto;
+import com.demo.web.dto.StoreDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,10 @@ public class StoreServiceImpl implements StoreService{
     private final StoreRepository storeRepository;
 
     @Override
-    public ProfileDto getStoreProfile(Integer id){
+    public StoreDto getStoreProfile(Integer id){
         return storeRepository.getStoreById(id)
                 .map(store -> {
-                    var storeDto = mappingHelper.map(store, ProfileDto.class);
+                    var storeDto = mappingHelper.map(store, StoreDto.class);
                     ResponseEntity.ok(store);
                     return storeDto;
                 })

@@ -100,4 +100,15 @@ public class AuthServiceImpl implements AuthService {
                     .createdDate(Instant.now())
                     .account(account).build());
     }
+
+//    staff account
+    @Override
+    public void removeAccount(Integer accountId){
+        if(accountRepository.findById(accountId).isPresent()){
+            accountRepository.deleteById(accountId);
+        }
+        else {
+            throw new ServiceException("Account cant delete, it is connection", "err.api.account-cant-delete");
+        }
+    }
 }

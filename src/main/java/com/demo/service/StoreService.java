@@ -1,7 +1,7 @@
 package com.demo.service;
 
-import com.demo.web.dto.ProfileDto;
+import com.demo.web.dto.StoreDto;
 
 public interface StoreService {
-    ProfileDto getStoreProfile(Integer id);
+    StoreDto getStoreProfile(Integer id);
 }
