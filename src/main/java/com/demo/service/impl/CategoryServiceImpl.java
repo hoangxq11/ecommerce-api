@@ -4,6 +4,7 @@ import com.demo.model.Category;
 import com.demo.repository.CategoryRepository;
 import com.demo.service.CategoryService;
 import com.demo.service.utils.MappingHelper;
+import com.demo.web.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
-    private final MappingHelper mappingHelper;
 
     @Override
     public List<Category> getCategoriesWithoutParent() {
@@ -26,5 +26,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<Category> getCategoriesByParentId(Integer parentId) {
         return new ArrayList<>(categoryRepository.findAllByCategoryParent_Id(parentId));
+    }
+
+    @Override
+    public Category getCategoriesById(Integer categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException(Category.class.getName(), categoryId.toString()));
     }
 }

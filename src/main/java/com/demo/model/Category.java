@@ -16,4 +16,7 @@ public class Category {
     private Category categoryParent;
     @Column(name = "name")
     private String name;
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private Image image;
 }

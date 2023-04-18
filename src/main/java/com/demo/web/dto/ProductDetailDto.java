@@ -17,7 +17,7 @@ public class ProductDetailDto {
     private Integer id;
     private float price;
     private int countInStock;
-    private Product product;
+    private ProductDto productDto;
     private Discount discount;
     private Color color;
     private Size size;

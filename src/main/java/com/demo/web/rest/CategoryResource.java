@@ -18,8 +18,19 @@ public class CategoryResource {
         return ResponseUtils.ok(categoryService.getCategoriesWithoutParent());
     }
 
-    @GetMapping("/{parentId}")
+    @GetMapping("/parent/{parentId}")
     public ResponseEntity<?> getCategoriesByParentId(@PathVariable Integer parentId){
         return ResponseUtils.ok(categoryService.getCategoriesByParentId(parentId));
+    }
+
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<?> getCategoriesById(@PathVariable Integer categoryId){
+        return ResponseUtils.ok(categoryService.getCategoriesById(categoryId));
+    }
+
+    // TODO: api get search special
+    @GetMapping("/special-search")
+    public ResponseEntity<?> getSearchSpecial(){
+        return null;
     }
 }
