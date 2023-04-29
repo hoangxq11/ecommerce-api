@@ -16,7 +16,6 @@ public class AddressReq {
     private String district;
     @NotBlank
     private String ward;
-    @NotBlank
     private String content;
     private Boolean defaultAddress;
 }

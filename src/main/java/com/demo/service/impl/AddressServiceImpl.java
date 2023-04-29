@@ -26,9 +26,10 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public AddressDto getDefaultAddressCurrentAccount() {
-        return mappingHelper.map(addressRepository
-                        .findByAccount_UsernameAndDefaultAddress(getCurrentUsernameAccount(), true),
-                AddressDto.class);
+        var addressDefault = addressRepository.findByAccount_UsernameAndDefaultAddress(getCurrentUsernameAccount(), true);
+        if (addressDefault.isPresent())
+            return mappingHelper.map(addressDefault, AddressDto.class);
+        return new AddressDto();
     }
 
     @Override
@@ -46,11 +47,13 @@ public class AddressServiceImpl implements AddressService {
         address.setAccount(account);
         if (addressRepository.count() == 0) address.setDefaultAddress(true);
         else if (addressReq.getDefaultAddress().equals(true)) {
-            Address addressDefault = addressRepository.findByAccount_UsernameAndDefaultAddress(
+            var addressDefault = addressRepository.findByAccount_UsernameAndDefaultAddress(
                     username, true
             );
-            addressDefault.setDefaultAddress(false);
-            addressRepository.save(addressDefault);
+            if (addressDefault.isPresent()) {
+                addressDefault.get().setDefaultAddress(false);
+                addressRepository.save(addressDefault.get());
+            }
         }
         addressRepository.save(address);
     }
@@ -60,11 +63,13 @@ public class AddressServiceImpl implements AddressService {
         Address address = addressRepository.findById(addressId)
                 .orElseThrow(() -> new EntityNotFoundException(Address.class.getName(), addressId.toString()));
         if (address.getDefaultAddress().equals(false) && addressReq.getDefaultAddress().equals(true)) {
-            Address addressDefault = addressRepository.findByAccount_UsernameAndDefaultAddress(
+            var addressDefault = addressRepository.findByAccount_UsernameAndDefaultAddress(
                     getCurrentUsernameAccount(), true
             );
-            addressDefault.setDefaultAddress(false);
-            addressRepository.save(addressDefault);
+            if (addressDefault.isPresent()) {
+                addressDefault.get().setDefaultAddress(false);
+                addressRepository.save(addressDefault.get());
+            }
             mappingHelper.mapIfSourceNotNullAndStringNotBlank(addressReq, address);
             addressRepository.save(address);
         } else if (address.getDefaultAddress().equals(true) && addressReq.getDefaultAddress().equals(false)) {

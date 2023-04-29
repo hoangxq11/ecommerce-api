@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface ProductDetailRepository extends JpaRepository<ProductDetail, Integer>, JpaSpecificationExecutor<ProductDetail> {
     Optional<ProductDetail> findFirstByProduct_Id(Integer productId);
     List<ProductDetail> findByProduct_Id(Integer productId);
+    List<ProductDetail> findByProduct_IdAndSize_IdAndColor_Id(Integer productId, Integer sizeId, Integer colorId);
 }

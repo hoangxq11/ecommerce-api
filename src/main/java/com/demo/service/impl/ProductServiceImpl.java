@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,7 +48,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> getSpecialProducts() {
-        return productRepository.findAll()
+        var products =  productRepository.findAll()
                 .stream().map(e -> {
                     ProductDto res = mappingHelper.map(e, ProductDto.class);
                     var productDetail = productDetailRepository.findFirstByProduct_Id(e.getId())
@@ -58,6 +59,8 @@ public class ProductServiceImpl implements ProductService {
                 })
                 .filter(e -> e.getDiscount() != null)
                 .collect(Collectors.toList());
+        products.sort((o1, o2) -> (o2.getId().compareTo(o1.getId())));
+        return products;
     }
 
     @Override
@@ -76,7 +79,7 @@ public class ProductServiceImpl implements ProductService {
 
         categoryRepository.findAllByCategoryParent_Id(categoryId)
                 .forEach(e -> products.addAll(getProductsOfCategory(e.getId())));
-
+        products.sort((o1, o2) -> (o2.getId().compareTo(o1.getId())));
         return products;
     }
 }

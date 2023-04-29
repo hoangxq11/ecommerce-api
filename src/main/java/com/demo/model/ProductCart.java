@@ -28,4 +28,6 @@ public class ProductCart {
     private ProductDetail productDetail;
     @Column(name = "quantity")
     private int quantity;
+    @Column(name = "checked", nullable = false)
+    private Boolean checked;
 }

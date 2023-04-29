@@ -2,6 +2,7 @@ package com.demo.web.rest;
 
 import com.demo.service.CartService;
 import com.demo.web.dto.request.AddToCartReq;
+import com.demo.web.dto.request.ProductCartUpdateReq;
 import com.demo.web.dto.response.utils.ResponseUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,16 @@ public class CartResource {
     public ResponseEntity<?> addToCart(@RequestBody AddToCartReq addToCartReq) {
         cartService.addToCart(addToCartReq);
         return ResponseUtils.created();
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateProductCart(@RequestBody ProductCartUpdateReq productCartUpdateReq) {
+        return ResponseUtils.ok("Updated", cartService.updateProductCart(productCartUpdateReq));
+    }
+
+    @PostMapping("/check-to-payment/{productDetailId}")
+    public ResponseEntity<?> updateCheckToPayment(@PathVariable Integer productDetailId) {
+        return ResponseUtils.ok("Updated", cartService.updateCheckToPayment(productDetailId));
     }
 
     @GetMapping

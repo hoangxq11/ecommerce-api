@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddToCartReq {
-    private Integer productDetailId;
-    private int quantity;
+    private Integer productId;
+    protected Integer colorId;
+    private Integer sizeId;
+    private Integer quantity;
 }

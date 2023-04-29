@@ -6,4 +6,5 @@ import lombok.Data;
 public class ProductCartDto {
     private ProductDetailDto productDetailDto;
     private int quantity;
+    private Boolean checked;
 }
