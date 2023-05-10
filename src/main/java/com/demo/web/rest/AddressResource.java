@@ -21,6 +21,11 @@ public class AddressResource {
         return ResponseUtils.ok(addressService.getDefaultAddressCurrentAccount());
     }
 
+    @GetMapping("/{addressId}")
+    public ResponseEntity<?> getAddressCurrentAccountByAddressId(@PathVariable Integer addressId) {
+        return ResponseUtils.ok(addressService.getAddressCurrentAccountByAddressId(addressId));
+    }
+
     @GetMapping
     public ResponseEntity<?> getAllAddressCurrentAccount() {
         return ResponseUtils.ok(addressService.getAllAddressCurrentAccount());

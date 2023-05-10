@@ -34,8 +34,10 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public List<AddressDto> getAllAddressCurrentAccount() {
-        return mappingHelper.mapList(addressRepository
+        var res = mappingHelper.mapList(addressRepository
                 .findByAccount_Username(getCurrentUsernameAccount()), AddressDto.class);
+        res.sort((i1, i2) -> Boolean.compare(i2.getDefaultAddress(), i1.getDefaultAddress()));
+        return res;
     }
 
     @Override
@@ -87,6 +89,13 @@ public class AddressServiceImpl implements AddressService {
         Address address = addressRepository.findById(addressId)
                 .orElseThrow(() -> new EntityNotFoundException(Address.class.getName(), addressId.toString()));
         addressRepository.delete(address);
+    }
+
+    @Override
+    public AddressDto getAddressCurrentAccountByAddressId(Integer addressId) {
+        var addressDefault = addressRepository.findById(addressId)
+                .orElseThrow(() -> new EntityNotFoundException(Address.class.getName(), addressId.toString()));
+        return mappingHelper.map(addressDefault, AddressDto.class);
     }
 
     private String getCurrentUsernameAccount() {

@@ -52,7 +52,7 @@ public class CartServiceImpl implements CartService {
         } else productDetail = productDetailList.get(new Random().nextInt(productDetailList.size()));
 
         var productCart = productCartRepository
-                .findByCart_IdAndAndProductDetail_Id(cart.getId(), productDetail.getId())
+                .findByCart_IdAndProductDetail_Id(cart.getId(), productDetail.getId())
                 .orElseGet(() -> ProductCart.builder()
                         .id(new ProductCartKey(cart.getId(), productDetail.getId()))
                         .cart(cart)
@@ -84,7 +84,7 @@ public class CartServiceImpl implements CartService {
     public void removeProductCart(Integer productDetailId) {
         var cart = getCartCurrentUser();
         var productCart = productCartRepository
-                .findByCart_IdAndAndProductDetail_Id(cart.getId(), productDetailId)
+                .findByCart_IdAndProductDetail_Id(cart.getId(), productDetailId)
                 .orElseThrow(() -> new ServiceException("Not found product in cart", ""));
         productCartRepository.delete(productCart);
     }
@@ -97,7 +97,7 @@ public class CartServiceImpl implements CartService {
                         new EntityNotFoundException(ProductDetail.class.getName(),
                                 productCartUpdateReq.getProductDetailId().toString()));
         var productCart = productCartRepository
-                .findByCart_IdAndAndProductDetail_Id(cart.getId(), productDetail.getId())
+                .findByCart_IdAndProductDetail_Id(cart.getId(), productDetail.getId())
                 .orElseThrow(() -> new EntityNotFoundException(ProductCart.class.getName(),
                         cart.getId().toString() + "-" + productDetail.getId().toString()));
         if (productCartUpdateReq.getQuantity() > productDetail.getCountInStock())
@@ -116,7 +116,7 @@ public class CartServiceImpl implements CartService {
                         new EntityNotFoundException(ProductDetail.class.getName(),
                                 productDetailId.toString()));
         var productCart = productCartRepository
-                .findByCart_IdAndAndProductDetail_Id(cart.getId(), productDetail.getId())
+                .findByCart_IdAndProductDetail_Id(cart.getId(), productDetail.getId())
                 .orElseThrow(() -> new EntityNotFoundException(ProductCart.class.getName(),
                         cart.getId().toString() + "-" + productDetail.getId().toString()));
         productCart.setChecked(!productCart.getChecked());

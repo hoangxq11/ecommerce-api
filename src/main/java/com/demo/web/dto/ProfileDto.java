@@ -13,8 +13,7 @@ import java.util.Date;
 @Builder
 public class ProfileDto {
     private Integer id;
-    private String firstName;
-    private String lastName;
+    private String fullName;
     private String phoneNumber;
     private Date dateOfBirth;
     private String gender;

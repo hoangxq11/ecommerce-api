@@ -1,9 +1,7 @@
 package com.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -11,7 +9,8 @@ import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -38,6 +37,7 @@ public class Account {
 			inverseJoinColumns = @JoinColumn(name = "authority_id"))
 	private Set<Authority> authorities = new HashSet<Authority>();
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "account")
+	@JsonIgnore
 	private Profile profile;
 	@ManyToOne
 	@JoinColumn(name = "rank_id")

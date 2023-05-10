@@ -22,12 +22,12 @@ public class AuthResource {
     private final AuthService authService;
 
     @PostMapping("/signin")
-    public ResponseEntity<Response> authenticateAccount(@Valid @RequestBody LoginRequest loginRequest){
+    public ResponseEntity<Response> authenticateAccount(@Valid @RequestBody LoginRequest loginRequest) {
         return ResponseUtils.ok(authService.authenticateAccount(loginRequest));
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Response> registerAccount(@Valid @RequestBody SignupRequest signupRequest){
+    public ResponseEntity<Response> registerAccount(@Valid @RequestBody SignupRequest signupRequest) {
         authService.registerAccount(signupRequest);
         return ResponseUtils.created();
     }

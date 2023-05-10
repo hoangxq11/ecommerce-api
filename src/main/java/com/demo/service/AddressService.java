@@ -15,4 +15,6 @@ public interface AddressService {
     void updateAddress(Integer addressId, AddressReq addressReq);
 
     void removeAddress(Integer addressId);
+
+    AddressDto getAddressCurrentAccountByAddressId(Integer addressId);
 }

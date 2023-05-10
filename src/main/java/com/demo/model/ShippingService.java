@@ -16,9 +16,9 @@ public class ShippingService {
     @Column(name = "name")
     private String name;
     @Column(name = "cost")
-    private float cost;
+    private Float cost;
     @Column(name = "time")
-    private Date time;
+    private Integer time;
     @Column(name = "description")
     @Type(type = "text")
     private String description;

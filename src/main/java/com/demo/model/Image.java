@@ -25,6 +25,7 @@ public class Image {
     private String title;
     @ManyToOne
     @JoinColumn(name = "assessment_id")
+    @JsonIgnore
     private Assessment assessment;
     @ManyToOne
     @JoinColumn(name = "store_id")
