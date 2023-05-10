@@ -1,0 +1,66 @@
+package com.demo.web.rest;
+
+import com.demo.model.Account;
+import com.demo.model.Address;
+import com.demo.repository.AccountRepository;
+import com.demo.repository.AddressRepository;
+import com.demo.service.AuthService;
+import com.demo.service.utils.MappingHelper;
+import com.demo.service.utils.SignupRequestGenerator;
+import com.demo.web.dto.request.LoginRequest;
+import com.demo.web.dto.request.SignupRequest;
+import com.demo.web.dto.response.utils.Response;
+import com.demo.web.dto.response.utils.ResponseUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+
+@RequiredArgsConstructor
+@Slf4j
+@RestController
+@RequestMapping("/api/auth")
+@CrossOrigin("*")
+public class AuthResource {
+
+    private final AuthService authService;
+    private final AddressRepository addressRepository;
+    private final AccountRepository accountRepository;
+    private final MappingHelper mappingHelper;
+
+    @PostMapping("/signin")
+    public ResponseEntity<Response> authenticateAccount(@Valid @RequestBody LoginRequest loginRequest) {
+        return ResponseUtils.ok(authService.authenticateAccount(loginRequest));
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<Response> registerAccount(@RequestBody SignupRequest signupRequest) {
+        List<Address> addresses = addressRepository.findAll();
+        List<Account> accounts = accountRepository.findAll().stream().filter(e -> e.getId() != 4).collect(Collectors.toList());
+
+        for (Account i : accounts) {
+            Address address1 = addresses.get(new Random().nextInt(addresses.size()));
+            Address address = new Address();
+
+            address.setContent(address1.getContent());
+            address.setDistrict(address1.getDistrict());
+            address.setProvince(address1.getProvince());
+            address.setWard(address1.getWard());
+            address.setFullName(address1.getFullName());
+            address.setPhoneNumber(address1.getPhoneNumber());
+            address.setAccount(i);
+            address.setDefaultAddress(true);
+            addressRepository.save(address);
+        }
+
+
+//        authService.registerAccount(signupRequest);
+        return ResponseUtils.created();
+    }
+
+}

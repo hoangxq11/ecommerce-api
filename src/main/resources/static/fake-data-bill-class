@@ -1,0 +1,126 @@
+package com.demo.web.rest;
+
+import com.demo.model.*;
+import com.demo.model.constants.OrderStatus;
+import com.demo.repository.*;
+import com.demo.service.CategoryService;
+import com.demo.service.utils.MappingHelper;
+import com.demo.web.dto.request.BillReq;
+import com.demo.web.dto.response.utils.ResponseUtils;
+import com.demo.web.exception.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/api/categories")
+@CrossOrigin("*")
+public class CategoryResource {
+    private final CategoryService categoryService;
+    private final MappingHelper mappingHelper;
+    private final AddressRepository addressRepository;
+    private final ShippingServiceRepository shippingServiceRepository;
+    private final BillRepository billRepository;
+    private final ProductBillRepository productBillRepository;
+    private final AccountRepository accountRepository;
+    private final ProductDetailRepository productDetailRepository;
+
+    private Date ramDomDate () {
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+
+        Date startDate = new Date(121, 0, 1); // 1/1/2021
+        Date endDate = new Date(122, 11, 31); // 31/12/2022
+        long startMillis = startDate.getTime();
+        long endMillis = endDate.getTime();
+        long randomMillis = random.nextLong(startMillis, endMillis + 1);
+        Date randomDate = new Date(randomMillis);
+        return randomDate;
+    }
+
+    private void solve(Account account, BillReq billReq, List<ProductBill> productBills) {
+        Bill bill = mappingHelper.map(billReq, Bill.class);
+        bill.setStatus(OrderStatus.DONE);
+        bill.setPaymentTime(ramDomDate());
+
+        bill.setAccount(account);
+
+        var address = addressRepository.findById(billReq.getAddressId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        Address.class.getName(), billReq.getAddressId().toString()));
+        bill.setAddress(address);
+
+        var shippingService = shippingServiceRepository.findById(billReq.getShippingServiceId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        ShippingService.class.getName(), billReq.getShippingServiceId().toString()));
+        bill.setShippingService(shippingService);
+
+        productBills.forEach(e -> e.setBill(bill));
+
+        billRepository.save(bill);
+        productBillRepository.saveAll(productBills);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getCategoriesWithoutParent() {
+
+        List<Account> accounts = accountRepository.findAll();
+        List<ProductDetail> productDetails = productDetailRepository.findAll();
+        List<Integer> numOfBill = Arrays.asList(5, 20, 30, 50);
+        List<Integer> numOfProduct = Arrays.asList(1, 2, 4, 5);
+        List<Integer> quantity = Arrays.asList(1, 2, 3);
+
+        for (Account account : accounts) {
+            for (int i = 0; i < numOfBill.get(new Random().nextInt(numOfBill.size())); i++) {
+                Collections.shuffle(productDetails);
+                List<ProductDetail> productDetailList = productDetails.subList(0, numOfProduct
+                        .get(new Random().nextInt(numOfProduct.size())));
+                List<ProductBill> productBills = productDetailList.stream().map(e -> {
+                    ProductBill productBill = new ProductBill();
+                    productBill.setProductDetail(e);
+                    productBill.setQuantity(quantity.get(new Random().nextInt(quantity.size())));
+                    return productBill;
+                }).collect(Collectors.toList());
+
+                BillReq billReq = new BillReq();
+                billReq.setPaymentMethod("POD");
+                billReq.setDescriptionPay("None");
+                billReq.setAddressId(addressRepository.findByAccount_Username(account.getUsername()).get(0).getId());
+                billReq.setShippingServiceId(new Random().nextInt(2) + 1);
+
+                float totalAmount = 0;
+                for (ProductBill productBill: productBills){
+                    totalAmount += productBill.getProductDetail().getPrice() * productBill.getQuantity();
+                    totalAmount -= productBill.getProductDetail().getDiscount().getValue() * productBill.getQuantity();
+                }
+                totalAmount += billReq.getShippingServiceId() == 1 ? 20000: 40000;
+
+                billReq.setTotalAmount(totalAmount);
+
+                solve(account, billReq, productBills);
+            }
+        }
+
+        return ResponseUtils.ok(categoryService.getCategoriesWithoutParent());
+    }
+
+    @GetMapping("/parent/{parentId}")
+    public ResponseEntity<?> getCategoriesByParentId(@PathVariable Integer parentId) {
+        return ResponseUtils.ok(categoryService.getCategoriesByParentId(parentId));
+    }
+
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<?> getCategoriesById(@PathVariable Integer categoryId) {
+        return ResponseUtils.ok(categoryService.getCategoriesById(categoryId));
+    }
+
+    // TODO: api get search special
+    @GetMapping("/special-search")
+    public ResponseEntity<?> getSearchSpecial() {
+        return null;
+    }
+}
