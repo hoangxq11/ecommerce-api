@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Inter:100,200,300,400,500,600,700,800,900&display=swap');
+
+        body {
+            /* CSS Variables that may have been missed get put on body */
+            --bs-gutter-x: 1.5rem;
+            --bs-gutter-y: 0;
+        }
+
+        * {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        :root {
+            --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            --bs-body-font-family: var(--bs-font-sans-serif);
+            --bs-body-font-size: 1rem;
+            --bs-body-font-weight: 400;
+            --bs-body-line-height: 1.5;
+            --bs-body-color: #212529;
+            --bs-body-bg: #fff;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            :root {
+                scroll-behavior: smooth;
+            }
+        }
+
+        :root {
+            --litepicker-month-width: calc(var(--litepicker-day-width) * 7);
+            --litepicker-day-width: 44px;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            :root {
+                scroll-behavior: auto;
+            }
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--bs-body-font-family);
+            font-size: 14px;
+            font-weight: var(--bs-body-font-weight);
+            line-height: 1.4;
+            color: #21262c;
+            text-align: var(--bs-body-text-align);
+            background-color: #f5f7f9;
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
+            font: 100% Inter, "SF Pro Display", "Helvetica Neue", Helvetica, Roboto, Arial;
+            width: 100%;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            letter-spacing: -.03em;
+        }
+
+        *, :after, :before {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .loading {
+            position: fixed;
+            z-index: 4000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            background-color: rgba(33, 38, 44, .8);
+        }
+
+        .main {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            margin: 0 auto;
+            padding-left: 30px;
+            padding-right: 30px;
+        }
+
+        .main-layout-sm {
+            max-width: 708px;
+        }
+
+        .chat-box {
+            position: fixed;
+            right: 24px !important;
+            bottom: 24px !important;
+            cursor: pointer;
+        }
+
+        .footer_mobile {
+            min-height: 56px;
+            padding-bottom: env(safe-area-inset-bottom);
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #f5f7f9;
+            -webkit-box-shadow: 0 -2px 4px rgba(0, 0, 0, .12);
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, .12);
+            z-index: 90;
+        }
+
+        @media (min-width: 768px) {
+            .show-mobile {
+                display: none !important;
+            }
+        }
+
+        span {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .lds-ring {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+
+        .header-desktop {
+            padding-top: 4px;
+        }
+
+        .main-wrap {
+            display: flex;
+            display: -ms-flexbox;
+            display: -webkit-box;
+            min-height: calc(100vh - 1px);
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            padding-top: 4px;
+        }
+
+        footer {
+            display: block;
+        }
+
+        .main-footer {
+            margin-top: auto;
+            padding-bottom: 32px;
+        }
+
+        .footer_mobile-inner {
+            overflow: hidden;
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            padding: 4px 16px;
+        }
+
+        .lds-ring div {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            display: block;
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            margin: 8px;
+            border: 4px solid #fff;
+            border-radius: 50%;
+            -webkit-animation: lds-ring 1.2s cubic-bezier(.5, 0, .5, 1) infinite;
+            animation: lds-ring 1.2s cubic-bezier(.5, 0, .5, 1) infinite;
+            border-color: #fff transparent transparent transparent;
+        }
+
+        .lds-ring div:nth-child(1) {
+            -webkit-animation-delay: -.3s;
+            animation-delay: -.3s;
+        }
+
+        .lds-ring div:nth-child(2) {
+            -webkit-animation-delay: -.15s;
+            animation-delay: -.15s;
+        }
+
+        .lds-ring div:nth-child(3) {
+            -webkit-animation-delay: -.1s;
+            animation-delay: -.1s;
+        }
+
+        .row {
+            --bs-gutter-x: 1.5rem;
+            --bs-gutter-y: 0;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            margin-top: calc(-1 * var(--bs-gutter-y));
+            margin-right: calc(-.5 * var(--bs-gutter-x));
+            margin-left: calc(-.5 * var(--bs-gutter-x));
+        }
+
+        .justify-content-between {
+            -webkit-box-pack: justify !important;
+            -ms-flex-pack: justify !important;
+            justify-content: space-between !important;
+        }
+
+        .align-items-center {
+            -webkit-box-align: center !important;
+            -ms-flex-align: center !important;
+            align-items: center !important;
+        }
+
+        .justify-content-between {
+            -ms-flex-wrap: nowrap;
+            flex-wrap: nowrap;
+        }
+
+        .row {
+            margin-left: -12px;
+            margin-right: -12px;
+        }
+
+        .row-16 {
+            margin-left: -8px;
+            margin-right: -8px;
+        }
+
+        .main-inner {
+            position: relative;
+            -webkit-box-flex: 1;
+            -ms-flex: 1 0 auto;
+            flex: 1 0 auto;
+            padding-bottom: 16px;
+        }
+
+        .text-center {
+            text-align: center !important;
+        }
+
+        a {
+            color: #0d6efd;
+            text-decoration: none !important;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        a:visited {
+            color: initial;
+        }
+
+        a:hover {
+            color: #0a58ca;
+        }
+
+        a:active, a:hover, a:visited {
+            color: initial;
+        }
+
+        .row-32 {
+            margin-left: -16px;
+            margin-right: -16px;
+        }
+
+        button {
+            border-radius: 0;
+            margin: 0;
+            font-family: inherit;
+            font-size: 14px;
+            line-height: inherit;
+            text-transform: none;
+            -webkit-appearance: none;
+            -webkit-tap-highlight-color: transparent;
+            outline: 0;
+        }
+
+        button:not(:disabled) {
+            cursor: pointer;
+        }
+
+        button:after, button:before {
+            content: "";
+            -webkit-box-flex: 1;
+            -ms-flex: 1 0 auto;
+            flex: 1 0 auto;
+        }
+
+        .row > * {
+            -ms-flex-negative: 0;
+            flex-shrink: 0;
+            width: 100%;
+            max-width: 100%;
+            padding-right: calc(var(--bs-gutter-x) * .5);
+            padding-left: calc(var(--bs-gutter-x) * .5);
+            margin-top: var(--bs-gutter-y);
+        }
+
+        .col-auto {
+            -webkit-box-flex: 0;
+            -ms-flex: 0 0 auto;
+            flex: 0 0 auto;
+            width: auto;
+        }
+
+        .block-right {
+            margin-right: 0;
+            margin-left: auto;
+        }
+
+        .row > * {
+            vertical-align: top;
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+
+        .row-16 > * {
+            vertical-align: top;
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+
+        .box {
+            border-radius: 6px;
+            background: #fff;
+            border: 1px solid #eaedf1;
+            -webkit-box-shadow: 0 4px 8px rgba(33, 38, 44, .16);
+            box-shadow: 0 4px 8px rgba(33, 38, 44, .16);
+        }
+
+        .box:after, .box:before {
+            content: " ";
+            display: table;
+        }
+
+        img {
+            vertical-align: middle;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .col {
+            -webkit-box-flex: 1;
+            -ms-flex: 1 0 0%;
+            flex: 1 0 0%;
+        }
+
+        .row-32 > * {
+            vertical-align: top;
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        .h4 {
+            margin-top: 0;
+            margin-bottom: .5rem;
+            font-weight: 500;
+            line-height: 1.2;
+            font-size: calc(1.275rem + .3vw);
+        }
+
+        @media (min-width: 1200px) {
+            .h4 {
+                font-size: 1.5rem;
+            }
+        }
+
+        .h4 {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .box__header {
+            padding-left: 24px;
+            padding-right: 24px;
+        }
+
+        .header-box {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+            flex-direction: row;
+        }
+
+        .header-box-simple {
+            border-bottom: 1px solid #eaedf1;
+        }
+
+        .ubg-white {
+            background-color: #fff;
+            color: #21262c;
+        }
+
+        .box__body {
+            padding-left: 24px;
+            padding-right: 24px;
+        }
+
+        .box__footer {
+            padding-left: 24px;
+            padding-right: 24px;
+        }
+
+        .footer-box {
+            display: flex;
+            display: -ms-flexbox;
+            display: -webkit-box;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+            flex-direction: row;
+            border-top: 1px solid #eaedf1;
+        }
+
+        .inline-block {
+            display: inline-block;
+            max-width: 100%;
+        }
+
+        .row-0 {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        svg {
+            vertical-align: middle;
+        }
+
+        .ubox-size-button-sm {
+            height: 36px;
+            min-width: 36px;
+            font-size: 14px;
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        .ubtn {
+            display: flex;
+            display: -ms-flexbox;
+            display: -webkit-box;
+            overflow: hidden;
+            vertical-align: middle;
+            border: 0;
+            outline: 0 !important;
+            cursor: pointer;
+            text-decoration: none !important;
+            font-weight: 500;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            font-size: 0;
+            text-align: center;
+            width: 100%;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            max-width: 100%;
+        }
+
+        .ubg-ghost {
+            background-color: transparent;
+            color: #21262c;
+        }
+
+        .ubtn.ubg-ghost {
+            padding: 0;
+        }
+
+        a:active, a:hover {
+            color: initial;
+        }
+
+        .box__header-inner {
+            padding-top: 16px;
+            padding-bottom: 16px;
+            min-height: 72px;
+            height: 100%;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+        }
+
+        .box-error {
+            text-align: center;
+        }
+
+        .box__footer-inner {
+            padding-top: 16px;
+            padding-bottom: 16px;
+            min-height: 72px;
+            height: 100%;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+        }
+
+        .row-0 > * {
+            vertical-align: top;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .ubtn-inner {
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            font-size: 14px;
+            -ms-flex-wrap: nowrap;
+            flex-wrap: nowrap;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+        }
+
+        .ubox-size-button-sm .ubtn-inner {
+            font-size: 14px;
+        }
+
+        .box__header-inner > * {
+            width: 100%;
+        }
+
+        .box-error-inner {
+            margin: 0 auto;
+            max-width: 360px;
+            padding: 64px 0;
+        }
+
+        .box__footer-inner > * {
+            width: 100%;
+        }
+
+        .ubox-square {
+            padding: 0 !important;
+        }
+
+        .ubox-size-button-default {
+            height: 44px;
+            min-width: 44px;
+            font-size: 14px;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        .ubg-transparent {
+            background-color: transparent;
+            color: #21262c;
+            border: 0;
+        }
+
+        .ubox-size-button-default.ubox-square {
+            width: 44px;
+        }
+
+        .ubg-transparent.ubg-hover {
+            -webkit-transition: .2s all linear;
+            -o-transition: .2s all linear;
+            transition: .2s all linear;
+        }
+
+        .ubg-transparent.ubg-hover:hover {
+            background-color: #e3e8ed;
+        }
+
+        .ubtn-ic {
+            display: inline-block;
+            -webkit-box-flex: 0;
+            -ms-flex: 0 0 auto;
+            flex: 0 0 auto;
+            width: auto;
+            max-width: 100%;
+            vertical-align: middle;
+            line-height: 1;
+        }
+
+        .ubtn-ic-left {
+            -webkit-box-ordinal-group: 2;
+            -ms-flex-order: 1;
+            order: 1;
+        }
+
+        .ubtn-text {
+            z-index: 2;
+            position: relative;
+            vertical-align: middle;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-ordinal-group: 3;
+            -ms-flex-order: 2;
+            order: 2;
+        }
+
+        .ubtn.ubox-size-button-sm .ubtn-text:not(:only-child):last-child {
+            padding-left: 6px;
+            padding-right: 3px;
+        }
+
+        .justify-content-center {
+            -webkit-box-pack: center !important;
+            -ms-flex-pack: center !important;
+            justify-content: center !important;
+        }
+
+        .list-mb8.list-crop {
+            margin-bottom: -8px;
+        }
+
+        .list-mb24.list-crop {
+            margin-bottom: -24px;
+        }
+
+        .ubox-size-button-default .ubtn-inner {
+            font-size: 14px;
+        }
+
+        .ubg-transparent .ubtn-inner {
+            color: #21262c;
+        }
+
+        .ubtn img {
+            z-index: 2;
+            position: relative;
+        }
+
+        @media (min-width: 768px) {
+            .col-md-auto {
+                -webkit-box-flex: 0;
+                -ms-flex: 0 0 auto;
+                flex: 0 0 auto;
+                width: auto;
+            }
+        }
+
+        .header-box-top:last-child {
+            -webkit-box-flex: 1;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+        }
+
+        .list-mb8 > * {
+            margin-bottom: 8px;
+        }
+
+        .fz-h5 {
+            font-size: 12px;
+        }
+
+        .list-mb24 > * {
+            margin-bottom: 24px;
+        }
+
+        @media (min-width: 576px) {
+            .col-sm {
+                -webkit-box-flex: 1;
+                -ms-flex: 1 0 0%;
+                flex: 1 0 0%;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .justify-content-md-center {
+                -webkit-box-pack: center !important;
+                -ms-flex-pack: center !important;
+                justify-content: center !important;
+            }
+        }
+
+        .h2 {
+            margin-top: 0;
+            margin-bottom: .5rem;
+            font-weight: 500;
+            line-height: 1.2;
+            font-size: calc(1.325rem + .9vw);
+        }
+
+        @media (min-width: 1200px) {
+            .h2 {
+                font-size: 2rem;
+            }
+        }
+
+        .color-danger {
+            color: #c91d1d;
+        }
+
+        .h2 {
+            margin: 0;
+            font-size: 22px;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .fz-h3 {
+            font-size: 16px;
+        }
+
+        input {
+            margin: 0;
+            font-family: inherit;
+            font-size: 14px;
+            line-height: inherit;
+            -webkit-tap-highlight-color: transparent;
+            outline: 0;
+            -webkit-appearance: none;
+            color: #21262c;
+            font-weight: 400;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        .mt24 {
+            margin-top: 24px;
+        }
+
+        .row-8 {
+            margin-left: -4px;
+            margin-right: -4px;
+        }
+
+        .ic-default {
+            width: 24px;
+            height: auto;
+        }
+
+        .row-8 > * {
+            vertical-align: top;
+            padding-left: 4px;
+            padding-right: 4px;
+        }
+
+        .d-block {
+            display: block !important;
+        }
+
+        .header-box-top .logo img {
+            max-height: 32px;
+        }
+
+        .footer-logos img {
+            height: 32px;
+        }
+
+        .ubox {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+        }
+
+        .ubox-size-ic-md {
+            height: 40px;
+            min-width: 40px;
+        }
+
+        .ubg-line-porcelain-dark {
+            border: 1px solid #eaedf1 !important;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+            background: 0 0;
+        }
+
+        .ubox-size-ic-md.ubox-square {
+            width: 40px;
+        }
+
+        .ubox-square.ubox-size-ic-md {
+            border-radius: 6px;
+        }
+
+        .h3 {
+            margin-top: 0;
+            margin-bottom: .5rem;
+            font-weight: 500;
+            line-height: 1.2;
+            font-size: calc(1.3rem + .6vw);
+        }
+
+        @media (min-width: 1200px) {
+            .h3 {
+                font-size: 1.75rem;
+            }
+        }
+
+        .color-info {
+            color: #1d9ec9;
+        }
+
+        .h3 {
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .pl12 {
+            padding-left: 12px;
+        }
+
+        .u {
+            text-decoration: underline;
+        }
+
+        .ubtn-text.pl12 {
+            padding-left: 12px !important;
+        }
+
+        .ubtn.ubox-size-button-default .ubtn-text:not(:only-child):last-child {
+            padding-left: 8px;
+            padding-right: 4px;
+        }
+
+        .ubg-line-porcelain-dark > * {
+            color: #eaedf1;
+        }
+
+        .ubtn.ubox-size-button-default:not(.ubox-square) .ic-default {
+            width: 24px;
+            height: 24px;
+        }
+
+
+        @keyframes lds-ring {
+            0% {
+                -webkit-transform: rotate(0);
+                transform: rotate(0);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+
+        }
+
+        /* These were inline style tags. Uses id+class to override almost everything */
+        #style-CRg3a.style-CRg3a {
+            display: none;
+        }
+
+        #eJOY__extension_root.style-mTgJU {
+            all: unset;
+        }
+
+        #nr-ext-rsicon.style-6p2gs {
+            position: absolute;
+            display: none;
+            width: 50px;
+            height: 50px;
+            z-index: 2147483647;
+            border-style: none;
+            background: transparent;
+        }
+
+        #snipcss-panel-container.style-dZmOx {
+            right: 60px;
+            top: 174px;
+        }
+
+        #style-xUOsm.style-xUOsm {
+            touch-action: none;
+        }
+
+        #style-olQG6.style-olQG6 {
+            touch-action: none;
+        }
+
+        #style-mRRRi.style-mRRRi {
+            top: -2px;
+            left: 0px;
+            height: 0px;
+            width: 0px;
+        }
+
+        #style-VDFok.style-VDFok {
+            top: -4px;
+            left: -4px;
+            height: 0px;
+            width: 0px;
+        }
+
+        #style-EZ78S.style-EZ78S {
+            top: -4px;
+            left: -4px;
+            height: 0px;
+            width: 0px;
+        }
+
+        #style-GhWG8.style-GhWG8 {
+            top: -2px;
+            left: -2px;
+            height: 0px;
+            width: 0px;
+        }
+
+        #style-t1BWz.style-t1BWz {
+            top: -2px;
+            left: 0px;
+            height: 0px;
+            width: 0px;
+        }
+
+        #style-8Jq9F.style-8Jq9F {
+            top: -4px;
+            left: -4px;
+            height: 0px;
+            width: 0px;
+        }
+
+        #style-DyGoF.style-DyGoF {
+            top: -4px;
+            left: -4px;
+            height: 0px;
+            width: 0px;
+        }
+
+        #style-SINtc.style-SINtc {
+            top: -2px;
+            left: -2px;
+            height: 0px;
+            width: 0px;
+        }
+
+        #snipcss_display_selector.style-yUt5N {
+            top: 0px;
+            left: 0px;
+            position: absolute;
+            transform: translateX(0px) translateY(-16px) translateZ(0px);
+        }
+
+        #snipcss_goup_button.style-ovit1 {
+            top: 0px;
+            left: 0px;
+            position: absolute;
+            transform: translateX(-13px) translateY(-16px) translateZ(0px);
+        }
+
+        #style-2K3ej.style-2K3ej {
+            top: 0px;
+            left: 0px;
+            position: absolute;
+        }
+
+        #snipcss-kiwi.style-dW9av {
+            left: 1426px;
+            top: 0px;
+        }
+
+    </style>
+</head>
+<body>
+<div onunload="" cz-shortcut-listen="true" class="snipcss-QbkUJ">
+    <div class="loading style-CRg3a" id="style-CRg3a">
+        <div class="lds-ring">
+            <div>
+            </div>
+            <div>
+            </div>
+            <div>
+            </div>
+            <div>
+            </div>
+        </div>
+    </div>
+    <div class="main main-layout-sm">
+        <div class="header-desktop show-desktop">
+            <div class="row row-16 align-items-center justify-content-between">
+                <div class="col-auto block-right">
+                    <div class="title h4">
+                        <a class="ubg-ghost ubox-size-button-sm ubg-hover ubg-active ubtn"
+                           href="/paymentv2/Payment/Error.html?backtoken=13d7feb503db45328213294d06075ab4&amp;vnp_Locale=en-US">
+                            <div class="ubtn-inner">
+                <span class="ubtn-ic ubtn-ic-left">
+                  <img src="https://sandbox.vnpayment.vn/paymentv2/images/img/flags/en.svg" alt="" class="ic-xl">
+                </span>
+                                <span class="ubtn-text">
+                  En
+                </span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-wrap">
+            <div class="main-inner main-inner-page">
+                <div class="box box-main">
+                    <div class="box__header header-box header-box-simple">
+                        <div class="box__header-inner">
+                            <div class="section">
+                                <div class="row justify-content-center align-items-center">
+                                    <div class="col-md-auto header-box-top">
+                                        <div class="row align-items-center justify-content-md-center">
+                                            <div class="col-md-auto col">
+                                                <div class="logo d-block text-center">
+                                                    <img src="https://sandbox.vnpayment.vn/paymentv2/Images/brands/logo.svg"
+                                                         alt="VNPAY">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box__body ubg-white">
+                        <div class="box-error">
+                            <div class="box-error-inner">
+                                <div class="list-mb8 list-crop">
+                                    <form action="/paymentv2/Payment/Error.html" autocomplete="off"
+                                          class="form form-vertical" id="formRenew" method="post" novalidate="">
+                                        <div class="icon">
+                                            <img src="https://sandbox.vnpayment.vn/paymentv2/images/graph/success.svg"
+                                                 alt="">
+                                        </div>
+                                        <div class="title h2 color-success">
+                                            Thanh toán thành công
+                                        </div>
+<!--                                        <div class="fz-h3">-->
+<!--                                            Có lỗi xảy ra trong quá trình xử lý. Vui lòng liên hệ 1900 55 55 77 để được-->
+<!--                                            hỗ trợ-->
+<!--                                        </div>-->
+                                        <input hidden="" name="code">
+                                        <input name="__RequestVerificationToken" type="hidden"
+                                               value="MAg9iQJxH6EFhzhctt4KM4bg9bjZbyMKuEZe5prBAAaYS0q_gMhqVr5L64aHW5gh3XXftIldy_i4zn_FGGou4Dznh_inrimiFUbJuG2bKns1">
+                                        <div class="section mt24">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box__footer footer-box">
+                        <div class="box__footer-inner">
+                            <div class="section">
+                                <div class="row row-32 list-mb24 list-crop align-items-center justify-content-center">
+                                    <div class="col fz-h5 show-mobile">
+                                        Phát triển bởi VNPAY © 2023
+                                    </div>
+                                    <div class="col-sm show-desktop">
+                                        <div class="row row-32 align-items-center">
+                                            <div class="col-auto">
+                                                <a href="tel:1900555577"
+                                                   class="ubg-ghost ubox-size-button-default ubg-hover ubg-active ubtn">
+                                                    <div class="ubtn-inner">
+                                                        <div class="ubg-line-porcelain-dark ubox-size-ic-md ubox-square ubox ubox-ic">
+                                                            <img src="https://sandbox.vnpayment.vn/paymentv2/images/icons-color/default2/default/24x24-phone.svg"
+                                                                 alt="" class="ic-default">
+                                                        </div>
+                                                        <span class="ubtn-text h3 color-info u pl12">
+                              1900.5555.77
+                            </span>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="col-auto">
+                                                <a href="mailto:hotro@vnpay.vn"
+                                                   class="ubg-ghost ubox-size-button-default ubg-hover ubg-active ubtn">
+                                                    <div class="ubtn-inner">
+                                                        <div class="ubg-line-porcelain-dark ubox-size-ic-md ubox-square ubox ubox-ic">
+                                                            <img src="https://sandbox.vnpayment.vn/paymentv2/images/icons-color/default2/default/24x24-email.svg"
+                                                                 alt="" class="ic-default">
+                                                        </div>
+                                                        <span class="ubtn-text h3 color-info u pl12">
+                              hotro@vnpay.vn
+                            </span>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="row row-8 justify-content-center">
+                                            <div class="col-auto">
+                                                <a href="https://profile.globalsign.com/SiteSeal/siteSeal/profile/profile.do?p1=e797f6ab&amp;p2=a06dada7520ada559537452c666a510c95706240fc2dfde64d4c864bf735462b7a370908847a6060a26daeac4f549d0bc8&amp;p3=7b58e9c169b0b0ff3eb932a37330cc91d466b871"
+                                                   target="_blank" class="footer-logos">
+                                                    <img src="https://sandbox.vnpayment.vn/paymentv2/images/img/logos/global-sign.svg"
+                                                         height="40">
+                                                </a>
+                                            </div>
+                                            <div class="col-auto">
+                                                <a href="https://seal.controlcase.com/index.php?page=showCert&amp;cId=4096647551"
+                                                   target="_blank" class="footer-logos">
+                                                    <img src="https://sandbox.vnpayment.vn/paymentv2/images/img/logos/pcidss.svg"
+                                                         height="40">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer main-footer show-desktop">
+            <div class="footer-inner text-center">
+                Phát triển bởi VNPAY © 2023
+            </div>
+        </footer>
+    </div>
+    <div class="chat-box show-desktop">
+        <div class="chat-box-icon">
+            <a href="https://zalo.me/4134983655549474109" target="_blank">
+                <img src="https://sandbox.vnpayment.vn/paymentv2/images/img/logos/zalo.svg" alt="">
+            </a>
+        </div>
+    </div>
+    <div class="footer_mobile show-mobile">
+        <div class="footer_mobile-inner">
+            <div class="row row-32 align-items-center">
+                <div class="col">
+                    <div class="inline-block">
+                        <a class="ubg-ghost ubox-size-button-sm ubg-hover ubg-active ubtn"
+                           href="/paymentv2/Payment/Error.html?backtoken=13d7feb503db45328213294d06075ab4&amp;vnp_Locale=en-US">
+                            <div class="ubtn-inner">
+                <span class="ubtn-ic ubtn-ic-left">
+                  <img src="https://sandbox.vnpayment.vn/paymentv2/images/img/flags/en.svg" alt="" class="ic-xl">
+                </span>
+                                <span class="ubtn-text">
+                  En
+                </span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="row row-0">
+                        <div class="col-auto">
+                            <a href="https://zalo.me/4134983655549474109"
+                               class="ubg-transparent ubox-size-button-default ubox-square ubg-hover ubg-active ubtn">
+                                <div class="ubtn-inner">
+                  <span class="ubtn-ic ubtn-ic-left">
+                    <img src="https://sandbox.vnpayment.vn/paymentv2/images/img/logos/zalo.svg" alt=""
+                         class="ic-default">
+                  </span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-auto">
+                            <a href="tel:1900555577"
+                               class="ubg-transparent ubox-size-button-default ubox-square ubg-hover ubg-active ubtn">
+                                <div class="ubtn-inner">
+                  <span class="ubtn-ic ubtn-ic-left">
+                    <img src="https://sandbox.vnpayment.vn/paymentv2/images/icons-color/default/default/24x24-phone.svg"
+                         alt="" class="ic-default">
+                  </span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-auto">
+                            <a href="mailto:hotrovnpay@vnpay.vn"
+                               class="ubg-transparent ubox-size-button-default ubox-square ubg-hover ubg-active ubtn">
+                                <div class="ubtn-inner">
+                  <span class="ubtn-ic ubtn-ic-left">
+                    <img src="https://sandbox.vnpayment.vn/paymentv2/images/icons-color/default/default/24x24-email.svg"
+                         alt="" class="ic-default">
+                  </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+</body>
+</html>
