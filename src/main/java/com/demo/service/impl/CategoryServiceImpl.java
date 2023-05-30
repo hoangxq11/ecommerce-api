@@ -46,7 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
     public void createCategory(CategoryReq categoryReq) {
         Category category = new Category();
         category.setName(categoryReq.getName());
-        if (categoryReq.getCategoryParentId() != null) {
+        if (categoryReq.getCategoryParentId() != null && categoryReq.getCategoryParentId() > -1) {
             category.setCategoryParent(categoryRepository.findById(categoryReq.getCategoryParentId())
                     .orElseThrow(() -> new EntityNotFoundException(
                             Category.class.getName(), categoryReq.getCategoryParentId().toString()
@@ -58,6 +58,34 @@ public class CategoryServiceImpl implements CategoryService {
                             Image.class.getName(), categoryReq.getImageId()
                     )));
         }
+        categoryRepository.save(category);
+    }
+
+    @Override
+    public void updateCategory(Integer categoryId, CategoryReq categoryReq) {
+        var category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException(Category.class.getName(), categoryId.toString()));
+        category.setName(categoryReq.getName());
+        if (categoryReq.getCategoryParentId() != null && categoryReq.getCategoryParentId() > -1) {
+            var categoryParent = categoryRepository.findById(categoryReq.getCategoryParentId())
+                    .orElseThrow(() -> new EntityNotFoundException(Category.class.getName()
+                            , categoryReq.getCategoryParentId().toString()));
+            category.setCategoryParent(categoryParent);
+        }
+        if (!categoryReq.getImageId().isBlank()) {
+            category.setImage(imageRepository.findById(UUID.fromString(categoryReq.getImageId()))
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            Image.class.getName(), categoryReq.getImageId()
+                    )));
+        }
+        categoryRepository.save(category);
+    }
+
+    @Override
+    public void deleteCategory(Integer categoryId) {
+        var category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException(Category.class.getName(), categoryId.toString()));
+        category.setIsDeleted(!category.getIsDeleted());
         categoryRepository.save(category);
     }
 }

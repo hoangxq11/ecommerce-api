@@ -27,4 +27,10 @@ public interface ProductService {
     void createProductDetail(ProductDetailReq productDetailReq);
 
     void updateProductDetail(Integer productDetailId, ProductDetailReq productDetailReq);
+
+    void deleteProduct(Integer productId);
+
+    void updateProduct(Integer productId, CreateCustomProductReq productReq);
+
+    List<ProductDto> getSpecialProducts();
 }

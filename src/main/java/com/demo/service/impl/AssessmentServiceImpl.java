@@ -10,6 +10,10 @@ import com.demo.repository.ImageRepository;
 import com.demo.repository.ProductBillRepository;
 import com.demo.service.AssessmentService;
 import com.demo.service.utils.MappingHelper;
+import com.demo.web.dto.AccountDto;
+import com.demo.web.dto.AssessmentDto;
+import com.demo.web.dto.ProductDetailDto;
+import com.demo.web.dto.ProfileDto;
 import com.demo.web.dto.request.AssessmentReq;
 import com.demo.web.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -55,6 +61,23 @@ public class AssessmentServiceImpl implements AssessmentService {
         return assessmentRepository.existsByAccountAndProductBill_Id(
                 getCurrentAccount(), productBillId
         );
+    }
+
+    @Override
+    public List<AssessmentDto> getAssessmentOfProduct(Integer productId) {
+        return assessmentRepository.findByProductBill_ProductDetail_Product_Id(productId)
+                .stream().map(e -> {
+                    var res = mappingHelper.map(e, AssessmentDto.class);
+
+                    var profileDto = mappingHelper.map(e.getAccount().getProfile(), ProfileDto.class);
+                    profileDto.setAccountDto(mappingHelper.map(e.getAccount(), AccountDto.class));
+                    res.setProfileDto(profileDto);
+
+                    var productDetailDto = mappingHelper.map(e.getProductBill().getProductDetail(), ProductDetailDto.class);
+                    res.setProductDetailDto(productDetailDto);
+
+                    return res;
+                }).collect(Collectors.toList());
     }
 
     private Account getCurrentAccount() {

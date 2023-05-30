@@ -62,6 +62,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductDto> getSpecialProducts() {
+        return productRepository.findAll()
+                .stream().filter(e -> !e.getIsDeleted())
+                .map(this::mapToProductDto)
+                .filter(e -> e.getDiscount() != null).sorted((o1, o2) -> (o2.getId().compareTo(o1.getId()))).collect(Collectors.toList());
+
+    }
+
+    @Override
     public List<ProductDto> getProductsOfCategory(Integer categoryId) {
         List<ProductDto> products = new ArrayList<>();
 
@@ -198,6 +207,44 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         productDetailRepository.save(productDetail);
+    }
+
+    @Override
+    public void deleteProduct(Integer productId) {
+        var product = productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException(Product.class.getName(), productId.toString()));
+        product.setIsDeleted(!product.getIsDeleted());
+        productRepository.save(product);
+    }
+
+    @Override
+    public void updateProduct(Integer productId, CreateCustomProductReq productReq) {
+        var product = productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        Product.class.getName(), productId.toString()
+                ));
+
+        mappingHelper.copyProperties(productReq, product);
+
+        var category = categoryRepository.findById(productReq.getCategoryId())
+                .orElseThrow(() -> new EntityNotFoundException(Category.class.getName(), productReq.getCategoryId().toString()));
+        product.setCategory(category);
+
+        String materialStr = productReq.getMaterialStr().trim();
+        if (!materialStr.isBlank() && !materialStr.isEmpty()) {
+            var material = materialRepository.findFirstByName(materialStr)
+                    .orElseGet(() -> materialRepository.save(new Material(materialStr)));
+            product.setMaterial(material);
+        }
+
+        String supplierStr = productReq.getSupplierStr().trim();
+        if (!supplierStr.isBlank() && !supplierStr.isEmpty()) {
+            var supplier = supplierRepository.findFirstByName(supplierStr)
+                    .orElseGet(() -> supplierRepository.save(new Supplier(supplierStr)));
+            product.setSupplier(supplier);
+        }
+
+        productRepository.save(product);
     }
 
     private ProductDto mapToProductDto(Product e) {

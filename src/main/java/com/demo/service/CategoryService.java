@@ -16,4 +16,8 @@ public interface CategoryService {
     List<Category> getAllCategories();
 
     void createCategory(CategoryReq categoryReq);
+
+    void updateCategory(Integer categoryId, CategoryReq categoryReq);
+
+    void deleteCategory(Integer categoryId);
 }
