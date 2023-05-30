@@ -26,4 +26,9 @@ public class AssessmentResource {
         return ResponseUtils.ok(assessmentService.checkExistAssessment(productBillId));
     }
 
+    @GetMapping("/get-assessment-of-product/{productId}")
+    public ResponseEntity<?> getAssessmentOfProduct(@PathVariable Integer productId){
+        return ResponseUtils.ok(assessmentService.getAssessmentOfProduct(productId));
+    }
+
 }

@@ -37,7 +37,19 @@ public class CategoryResource {
     @PostMapping()
     public ResponseEntity<?> createCategory(@RequestBody CategoryReq categoryReq) {
         categoryService.createCategory(categoryReq);
-        return ResponseUtils.ok();
+        return ResponseUtils.ok("Created");
+    }
+
+    @PutMapping("/{categoryId}")
+    public ResponseEntity<?> updateCategory(@RequestBody CategoryReq categoryReq, @PathVariable Integer categoryId) {
+        categoryService.updateCategory(categoryId, categoryReq);
+        return ResponseUtils.ok("Updated");
+    }
+
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<?> deleteCategory(@PathVariable Integer categoryId) {
+        categoryService.deleteCategory(categoryId);
+        return ResponseUtils.ok("Updated");
     }
 
     // TODO: api get search special

@@ -23,5 +23,6 @@ public class ProductDto {
     private Material material;
     private Supplier supplier;
     private Discount discount;
+    private Boolean isDeleted;
     List<Image> images;
 }

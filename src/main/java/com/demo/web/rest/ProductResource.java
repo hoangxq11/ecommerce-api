@@ -21,7 +21,7 @@ public class ProductResource {
 
     @GetMapping("/special-products")
     public ResponseEntity<?> getSpecialProducts() {
-        return ResponseUtils.ok(productService.getAllProducts());
+        return ResponseUtils.ok(productService.getSpecialProducts());
     }
 
     @GetMapping
@@ -55,6 +55,12 @@ public class ProductResource {
         return ResponseUtils.ok("Created");
     }
 
+    @PutMapping("/{productId}")
+    public ResponseEntity<?> updateProduct(@RequestBody CreateCustomProductReq productReq, @PathVariable Integer productId) {
+        productService.updateProduct(productId, productReq);
+        return ResponseUtils.ok("Updated");
+    }
+
     @PostMapping("/create-product-detail")
     public ResponseEntity<?> createProductDetail(@RequestBody ProductDetailReq productDetailReq) {
         productService.createProductDetail(productDetailReq);
@@ -70,6 +76,12 @@ public class ProductResource {
     @GetMapping("/single-product/{productId}")
     public ResponseEntity<?> getSingleProductById(@PathVariable Integer productId) {
         return ResponseUtils.ok(productService.getSingleProductById(productId));
+    }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Integer productId) {
+        productService.deleteProduct(productId);
+        return ResponseUtils.ok("Updated");
     }
 
 }
