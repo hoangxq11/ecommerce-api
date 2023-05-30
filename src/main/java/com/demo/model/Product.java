@@ -32,4 +32,6 @@ public class Product {
     private Supplier supplier;
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     List<Image> images;
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
 }

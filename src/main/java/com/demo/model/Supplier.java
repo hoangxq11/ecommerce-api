@@ -1,6 +1,7 @@
 package com.demo.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "suppliers")
 @Data
+@NoArgsConstructor
 public class Supplier {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,4 +24,8 @@ public class Supplier {
     @Column(name = "note")
     @Type(type = "text")
     private String note;
+
+    public Supplier(String name) {
+        this.name = name;
+    }
 }

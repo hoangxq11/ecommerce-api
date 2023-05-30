@@ -19,4 +19,6 @@ public class Category {
     @OneToOne
     @JoinColumn(name = "image_id")
     private Image image;
+    @Column(name = "isDeleted")
+    private Boolean isDeleted;
 }
