@@ -1,7 +1,8 @@
 package com.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
@@ -10,7 +11,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "images")
-@Data
+@Getter
+@Setter
 public class Image {
     @Id
     @GeneratedValue(generator = "UUID")
