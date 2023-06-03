@@ -14,6 +14,7 @@ import com.demo.web.dto.ProductDto;
 import com.demo.web.dto.request.StatisticalCriteria;
 import com.demo.web.dto.response.CustomerStatisticalRes;
 import com.demo.web.dto.response.GroupByStatusBillRes;
+import com.demo.web.dto.response.KpiRes;
 import com.demo.web.dto.response.ProductStatisticalRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -172,6 +173,51 @@ public class StatisticalServiceImpl implements StatisticalService {
             if (res.size() > 10) break;
             int count = entry.getValue().stream().mapToInt(e -> e.getProductBills().size()).sum();
             res.put(mapToCustomerStatisticalRes(entry.getKey()), count);
+        }
+
+        return res;
+    }
+
+    @Override
+    public KpiRes kpiProcess() {
+        StatisticalCriteria statisticalCriteria = new StatisticalCriteria();
+        statisticalCriteria.setStatus(OrderStatus.DONE);
+        Map<Date, List<Bill>> paymentTimeGrouped = billRepository.findAll(statisticalCriteria.toSpecification())
+                .stream().collect(Collectors.groupingBy(Bill::getPaymentTime));
+
+        List<Map.Entry<Date, List<Bill>>> list = new ArrayList<>(paymentTimeGrouped.entrySet());
+        list.sort(Map.Entry.comparingByKey(Comparator.reverseOrder()));
+
+        KpiRes res = new KpiRes();
+        int index = 0;
+
+        for (int i = index; i < index + 3 && i < list.size(); i++) {
+            list.get(i).getValue().forEach(e -> {
+                int count = 0;
+                for (var item : e.getProductBills())
+                    count += item.getQuantity();
+                res.setRevenueFirstSpin(res.getRevenueFirstSpin() + count);
+            });
+        }
+        index += 3;
+
+        for (int i = index; i < index + 3 && i < list.size(); i++) {
+            list.get(i).getValue().forEach(e -> {
+                int count = 0;
+                for (var item : e.getProductBills())
+                    count += item.getQuantity();
+                res.setRevenueSecondSpin(res.getRevenueSecondSpin() + count);
+            });
+        }
+        index += 3;
+
+        for (int i = index; i < index + 3 && i < list.size(); i++) {
+            list.get(i).getValue().forEach(e -> {
+                int count = 0;
+                for (var item : e.getProductBills())
+                    count += item.getQuantity();
+                res.setRevenueThirdSpin(res.getRevenueThirdSpin() + count);
+            });
         }
 
         return res;

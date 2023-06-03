@@ -5,6 +5,7 @@ import com.demo.web.dto.ProfileDto;
 import com.demo.web.dto.request.StatisticalCriteria;
 import com.demo.web.dto.response.CustomerStatisticalRes;
 import com.demo.web.dto.response.GroupByStatusBillRes;
+import com.demo.web.dto.response.KpiRes;
 import com.demo.web.dto.response.ProductStatisticalRes;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface StatisticalService {
     Map<ProductStatisticalRes, Integer> bestSalesProduct(StatisticalCriteria statisticalCriteria);
 
     Map<CustomerStatisticalRes, Integer> bestCustomerByStatus(StatisticalCriteria statisticalCriteria);
+
+    KpiRes kpiProcess();
 }

@@ -44,4 +44,9 @@ public class StatisticalResource {
         return ResponseUtils.ok(statisticalService.bestCustomerByStatus(statisticalCriteria));
     }
 
+    @GetMapping("/kpi")
+    public ResponseEntity<?> kpiProcess(){
+        return ResponseUtils.ok(statisticalService.kpiProcess());
+    }
+
 }
