@@ -192,33 +192,28 @@ public class StatisticalServiceImpl implements StatisticalService {
         int index = 0;
 
         for (int i = index; i < index + 3 && i < list.size(); i++) {
-            list.get(i).getValue().forEach(e -> {
-                int count = 0;
-                for (var item : e.getProductBills())
-                    count += item.getQuantity();
-                res.setRevenueFirstSpin(res.getRevenueFirstSpin() + count);
-            });
+            list.get(i).getValue().forEach(e -> res.setRevenueNow(res.getRevenueNow() + e.getTotalAmount()));
         }
         index += 3;
 
         for (int i = index; i < index + 3 && i < list.size(); i++) {
-            list.get(i).getValue().forEach(e -> {
-                int count = 0;
-                for (var item : e.getProductBills())
-                    count += item.getQuantity();
-                res.setRevenueSecondSpin(res.getRevenueSecondSpin() + count);
-            });
+            list.get(i).getValue().forEach(e -> res.setRevenueThirdSpin(res.getRevenueThirdSpin() + e.getTotalAmount()));
         }
         index += 3;
 
         for (int i = index; i < index + 3 && i < list.size(); i++) {
-            list.get(i).getValue().forEach(e -> {
-                int count = 0;
-                for (var item : e.getProductBills())
-                    count += item.getQuantity();
-                res.setRevenueThirdSpin(res.getRevenueThirdSpin() + count);
-            });
+            list.get(i).getValue().forEach(e -> res.setRevenueSecondSpin(res.getRevenueSecondSpin() + e.getTotalAmount()));
         }
+        index += 3;
+
+        for (int i = index; i < index + 3 && i < list.size(); i++) {
+            list.get(i).getValue().forEach(e -> res.setRevenueFirstSpin(res.getRevenueFirstSpin() + e.getTotalAmount()));
+        }
+
+        float x = res.getRevenueSecondSpin() / res.getRevenueFirstSpin();
+        float y = res.getRevenueThirdSpin() / res.getRevenueSecondSpin();
+        float z = (x + y) / 2;
+        res.setRevenuePredict(z * res.getRevenueThirdSpin());
 
         return res;
     }

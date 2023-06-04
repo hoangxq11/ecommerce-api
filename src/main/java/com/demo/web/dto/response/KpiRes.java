@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class KpiRes {
-    private int revenueFirstSpin;
-    private int revenueSecondSpin;
-    private int revenueThirdSpin;
-    private int revenuePredict;
-    private int kpi;
+    private float revenueFirstSpin;
+    private float revenueSecondSpin;
+    private float revenueThirdSpin;
+    private float revenuePredict;
+    private float revenueNow;
 }
