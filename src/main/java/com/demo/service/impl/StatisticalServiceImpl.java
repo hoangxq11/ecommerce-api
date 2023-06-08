@@ -128,7 +128,7 @@ public class StatisticalServiceImpl implements StatisticalService {
     }
 
     @Override
-    public Map<ProductStatisticalRes, Integer> bestSalesProduct(StatisticalCriteria statisticalCriteria) {
+    public List<ProductStatisticalRes> bestSalesProduct(StatisticalCriteria statisticalCriteria) {
         Map<Product, Integer> resMark = new LinkedHashMap<>();
 
         billRepository.findAll(statisticalCriteria.toSpecification())
@@ -146,17 +146,17 @@ public class StatisticalServiceImpl implements StatisticalService {
         List<Map.Entry<Product, Integer>> list = new ArrayList<>(resMark.entrySet());
         list.sort(Map.Entry.comparingByValue((b1, b2) -> Integer.compare(b2, b1)));
 
-        Map<ProductStatisticalRes, Integer> res = new LinkedHashMap<>();
+        List<ProductStatisticalRes> res = new ArrayList<>();
         for (Map.Entry<Product, Integer> entry : list) {
             if (res.size() > 10) break;
-            res.put(mapToProductStatistical(entry.getKey()), entry.getValue());
+            res.add(mapToProductStatistical(entry.getKey(), entry.getValue()));
         }
 
         return res;
     }
 
     @Override
-    public Map<CustomerStatisticalRes, Integer> bestCustomerByStatus(StatisticalCriteria statisticalCriteria) {
+    public List<CustomerStatisticalRes> bestCustomerByStatus(StatisticalCriteria statisticalCriteria) {
         Map<Account, List<Bill>> accountGrouped = billRepository.findAll(statisticalCriteria.toSpecification())
                 .stream().collect(Collectors.groupingBy(Bill::getAccount));
 
@@ -168,11 +168,11 @@ public class StatisticalServiceImpl implements StatisticalService {
             return Integer.compare(count2, count1);
         }));
 
-        Map<CustomerStatisticalRes, Integer> res = new LinkedHashMap<>();
+        List<CustomerStatisticalRes> res = new ArrayList<>();
         for (Map.Entry<Account, List<Bill>> entry : list) {
             if (res.size() > 10) break;
             int count = entry.getValue().stream().mapToInt(e -> e.getProductBills().size()).sum();
-            res.put(mapToCustomerStatisticalRes(entry.getKey()), count);
+            res.add(mapToCustomerStatisticalRes(entry.getKey(), count));
         }
 
         return res;
@@ -218,16 +218,17 @@ public class StatisticalServiceImpl implements StatisticalService {
         return res;
     }
 
-    private CustomerStatisticalRes mapToCustomerStatisticalRes(Account account) {
+    private CustomerStatisticalRes mapToCustomerStatisticalRes(Account account, int count) {
         return CustomerStatisticalRes.builder()
                 .accountId(account.getId())
                 .username(account.getUsername())
                 .phoneNumber(account.getProfile().getPhoneNumber())
                 .fullName(account.getProfile().getFullName())
+                .value(count)
                 .build();
     }
 
-    private ProductStatisticalRes mapToProductStatistical(Product e) {
+    private ProductStatisticalRes mapToProductStatistical(Product e, int value) {
         ProductStatisticalRes res = mappingHelper.map(e, ProductStatisticalRes.class);
         var productDetail = productDetailRepository.findFirstByProduct_Id(e.getId());
         float price = 0F;
@@ -235,6 +236,8 @@ public class StatisticalServiceImpl implements StatisticalService {
             price = productDetail.get().getPrice();
         }
         res.setPrice(price);
+        res.setValue(value);
+        res.setCategoryName(e.getCategory().getName());
         return res;
     }
 

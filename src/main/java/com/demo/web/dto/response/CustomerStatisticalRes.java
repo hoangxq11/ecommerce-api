@@ -14,4 +14,5 @@ public class CustomerStatisticalRes {
     private String username;
     private String phoneNumber;
     private String fullName;
+    private int value;
 }

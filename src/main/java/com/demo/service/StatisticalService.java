@@ -20,9 +20,9 @@ public interface StatisticalService {
 
     GroupByStatusBillRes billStatus();
 
-    Map<ProductStatisticalRes, Integer> bestSalesProduct(StatisticalCriteria statisticalCriteria);
+    List<ProductStatisticalRes> bestSalesProduct(StatisticalCriteria statisticalCriteria);
 
-    Map<CustomerStatisticalRes, Integer> bestCustomerByStatus(StatisticalCriteria statisticalCriteria);
+    List<CustomerStatisticalRes> bestCustomerByStatus(StatisticalCriteria statisticalCriteria);
 
     KpiRes kpiProcess();
 }

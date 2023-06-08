@@ -17,6 +17,7 @@ public class ProductStatisticalRes {
     private String name;
     private Date createdAt;
     private Float price;
-    private Category category;
+    private String categoryName;
+    private int value;
 }
 
